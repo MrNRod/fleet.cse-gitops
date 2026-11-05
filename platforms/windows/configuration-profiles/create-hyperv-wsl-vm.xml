@@ -1,0 +1,10 @@
+<Atomic>
+  <Add>
+    <Item>
+      <Target>
+        <LocURI>./Vendor/MSFT/Firewall/MdmStore/HyperVVMSettings/{40E0AC32-46A5-438A-A0B2-2B479E8F2E90}</LocURI>
+      </Target>
+      <Meta><Format xmlns="syncml:metinf">node</Format></Meta>
+    </Item>
+  </Add>
+</Atomic>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>PayloadContent</key>
+  <array>
+    <dict>
+      <key>PayloadType</key>
+      <string>com.apple.TCC.configuration-profile-policy</string>
+      <key>PayloadIdentifier</key>
+      <string>com.acme.osquery.fullDiskAccess.tcc</string>
+      <key>PayloadUUID</key>
+      <string>C07FFDDA-3758-427F-95F7-7ACF601DC4E8</string>
+      <key>PayloadVersion</key>
+      <integer>1</integer>
+      <key>Services</key>
+      <dict>
+        <key>SystemPolicyAllFiles</key>
+        <array>
+          <dict>
+            <key>Allowed</key>
+            <true/>
+            <key>Identifier</key>
+            <string>io.osquery.agent</string>
+            <key>IdentifierType</key>
+            <string>bundleID</string>
+            <key>CodeRequirement</key>
+            <string>identifier "io.osquery.agent" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "3522FA9PXF"</string>
+          </dict>
+          <dict>
+    	  	<key>Allowed</key>
+    		<true/>
+    		<key>Identifier</key>
+    		<string>com.fleetdm.orbit</string>
+    		<key>IdentifierType</key>
+    		<string>bundleID</string>
+    		<key>CodeRequirement</key>
+    		<string>identifier "com.fleetdm.orbit" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "8VBZ3948LU"</string>
+  		  </dict>
+          <dict>
+            <key>Allowed</key>
+            <true/>
+            <key>Identifier</key>
+            <string>/opt/orbit/bin/orbit/macos/stable/orbit</string>
+            <key>IdentifierType</key>
+            <string>path</string>
+            <key>CodeRequirement</key>
+            <string>identifier "com.fleetdm.orbit" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "8VBZ3948LU"</string>
+          </dict>
+          <dict>
+            <key>Allowed</key>
+            <true/>
+            <key>Identifier</key>
+            <string>/opt/orbit/bin/orbit/orbit</string>
+            <key>IdentifierType</key>
+            <string>path</string>
+            <key>CodeRequirement</key>
+            <string>identifier "com.fleetdm.orbit" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "8VBZ3948LU"</string>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </array>
+  <key>PayloadDisplayName</key>
+  <string>osquery Full Disk Access</string>
+  <key>PayloadIdentifier</key>
+  <string>com.fleet.osquery.fullDiskAccess</string>
+  <key>PayloadType</key>
+  <string>Configuration</string>
+  <key>PayloadUUID</key>
+  <string>2205041B-C2EA-4CA3-B277-45EE9DFC9D65</string>
+  <key>PayloadVersion</key>
+  <integer>1</integer>
+</dict>
+</plist>

@@ -1,0 +1,5 @@
+- name: Linux - Managed Firefox Extensions
+  platform: linux
+  query: SELECT 1 FROM file WHERE path = '/etc/firefox/policies/policies.json';
+  run_script:
+    path: ../scripts/firefox-extensions.sh

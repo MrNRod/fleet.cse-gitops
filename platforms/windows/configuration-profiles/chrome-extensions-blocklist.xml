@@ -1,0 +1,9 @@
+<Replace>
+  <Item>
+    <Target>
+      <LocURI>./Device/Vendor/MSFT/Policy/Config/Chrome~Policy~googlechrome~Extensions/ExtensionInstallBlocklist</LocURI>
+    </Target>
+    <Meta><Format xmlns="syncml:metinf">chr</Format></Meta>
+    <Data>&lt;enabled/&gt;&lt;data id=&quot;ExtensionInstallBlocklistDesc&quot; value=&quot;1&#xF000;gighmmpiobklfepjocnamgkkbiglidom&#xF000;2&#xF000;hdokiejnpimakedhajhdlcegeplioahd&quot;/&gt;</Data>
+  </Item>
+</Replace>

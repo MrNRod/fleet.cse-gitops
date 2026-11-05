@@ -1,0 +1,5 @@
+- name: Host restarted within 30 days
+  platform: darwin,windows,linux
+  description: System hasn't rebooted in 30+ days. Unpatched vulnerabilities, memory leaks, kernel bugs, stale security updates, degraded performance, unresolved zero-days remain exploitable.
+  resolution: Forced reboot will apply pending patches, clear memory leaks, reload kernel updates, restore system stability. May cause service interruptions, unsaved work loss, temporary unavailability.
+  query: SELECT days FROM uptime WHERE days < '30'

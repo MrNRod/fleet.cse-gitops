@@ -1,0 +1,5 @@
+- name: Linux - Managed Chrome Extensions
+  platform: linux
+  query: SELECT 1 FROM file WHERE path = '/etc/opt/chrome/policies/managed/fleet-extensions.json';
+  run_script:
+    path: ../scripts/chrome-extensions.sh
