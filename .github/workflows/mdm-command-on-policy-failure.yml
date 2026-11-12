@@ -1,0 +1,88 @@
+name: "MDM command on policy failure"
+
+# Sends MDM commands to hosts failing a policy, per the jobs in tools/mdm-commands/jobs.yml.
+# GitOps can't declare MDM commands, so this is the "fix it" half of a policy that detects
+# drift only an MDM command can repair (e.g. EnableRemoteDesktop). See tools/mdm-commands/README.md.
+#
+# Uses its OWN token (environment secret MDM_COMMANDS_API_TOKEN): an API-only user, maintainer
+# on the target fleets only, scoped to the endpoints in the README. Never the GitOps token.
+#
+# CADENCE is the repository variable MDM_COMMANDS_SCHEDULE: hourly, daily, or weekly. Unset or
+# anything else means off; manual runs still work and default to a dry run. A cron line can't
+# come from a variable, so all three are declared and the job runs only when the line that
+# fired matches the variable.
+
+on:
+  workflow_dispatch:
+    inputs:
+      job:
+        description: "Job name from jobs.yml (blank = all enabled jobs)"
+        type: string
+        default: ""
+      mode:
+        description: "failing = hosts failing the policy; all = every MDM-enrolled host in those fleets"
+        type: choice
+        options: [failing, all]
+        default: failing
+      dry_run:
+        description: "List the hosts only, send nothing"
+        type: boolean
+        default: true
+  schedule:
+    - cron: "23 * * * *" # hourly
+    - cron: "23 5 * * *" # daily, 05:23 UTC
+    - cron: "23 5 * * 1" # weekly, Monday 05:23 UTC
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  send:
+    if: >-
+      github.event_name != 'schedule' ||
+      (vars.MDM_COMMANDS_SCHEDULE == 'hourly' && github.event.schedule == '23 * * * *') ||
+      (vars.MDM_COMMANDS_SCHEDULE == 'daily' && github.event.schedule == '23 5 * * *') ||
+      (vars.MDM_COMMANDS_SCHEDULE == 'weekly' && github.event.schedule == '23 5 * * 1')
+    # On the job, not the workflow: on Mondays all three crons fire, and a workflow-level group
+    # would let a skipped run cancel the one that should go ahead.
+    concurrency:
+      group: ${{ github.workflow }}
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    # Restrict this environment's deployment branches to main. No required reviewers: they'd
+    # hold every scheduled run.
+    environment: mdm-commands
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install PyYAML
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq python3-yaml >/dev/null
+
+      - name: Send MDM commands
+        env:
+          FLEET_URL: ${{ secrets.FLEET_URL }}
+          FLEET_API_TOKEN: ${{ secrets.MDM_COMMANDS_API_TOKEN }}
+          JOB: ${{ inputs.job }}
+          MODE: ${{ inputs.mode || 'failing' }}
+          DRY_RUN: ${{ inputs.dry_run == true && '--dry-run' || '' }}
+        # Exit 3 (some hosts still pending) is normal for offline hosts: the command stays
+        # queued until they check in, so it doesn't fail the run.
+        run: |
+          if [ -z "$FLEET_API_TOKEN" ] || [ -z "$FLEET_URL" ]; then
+            echo "::notice title=Not set up yet::Add the MDM_COMMANDS_API_TOKEN secret to the mdm-commands environment (see tools/mdm-commands/README.md). Nothing was sent."
+            exit 0
+          fi
+          args=(--wait 300)
+          [ -n "$JOB" ] && args+=(--job "$JOB")
+          [ "$MODE" = all ] && args+=(--all)
+          [ -n "$DRY_RUN" ] && args+=(--dry-run)
+          rc=0
+          python3 tools/mdm-commands/send.py "${args[@]}" || rc=$?
+          [ "$rc" -eq 3 ] && { echo "::notice::Some hosts are offline; their command stays queued."; rc=0; }
+          exit "$rc"

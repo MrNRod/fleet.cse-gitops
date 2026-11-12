@@ -6,12 +6,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working in this
 
 This is a Fleet GitOps repository: the git-backed source of truth for configuring computers (macOS, Windows, Linux, iOS, iPadOS, Android, ChromeOS) managed by [Fleet](https://fleetdm.com). There's no app to build here — a commit to the default branch is a deploy. CI runs `fleetctl gitops` to apply the YAML in this repo to the live Fleet instance; pull requests get a dry run only. See `.github/workflows/workflow.yml` (GitHub) or `.gitlab-ci.yml` (GitLab).
 
+## Team rules (read CONVENTIONS.md)
+
+This repo is shared by the whole CSE team, and **it is public**. `CONVENTIONS.md` is the source of truth for layout, naming, and sanitization; follow it for every new or renamed file. In short:
+
+- `fleets/<firstname>.yml` is that person's sandbox. Don't edit someone else's fleet file unless they asked.
+- `platforms/**` and `labels/**` are a shared library. Before changing a shared file, run `python3 tools/check-conventions.py --who-uses <path>` and say which fleets the change will touch.
+- Never change a fleet's `name:` (GitOps deletes and recreates the fleet, which unassigns its hosts). Never create fleets in the UI (CI runs with `--delete-other-fleets`).
+- Never write customer names, domains, hostnames, emails, IPs, SSIDs, tenant IDs, certificates, or secrets. Use `example.com` and `$FLEET_SECRET_<NAME>`. Regenerate every `PayloadUUID`.
+- Don't commit or push. The team commits from GitHub Desktop. Leave changes in the working tree, grouped so they split into small commits, and suggest the commit split.
+
 ## Layout
 
 - `default.yml` — org-wide settings: org info, server URL, SSO, Apple Business Manager/VPP, migration and Windows MDM controls, and the `labels:` registration.
 - `fleets/*.yml` — one file per fleet (a named group of hosts, e.g. "💻 Workstations"). Each fleet's controls, software, policies, and reports live in its own file.
-- `labels/*.yml` — reusable host groupings (static or dynamic queries) used to scope profiles, software, and policies to a subset of hosts.
-- `platforms/<macos|windows|linux|ios|ipados|android|all>/` — the actual artifacts, one folder per kind:
+- `labels/{dynamic,manual,host-vitals}/*.yml` — reusable host groupings, filed by how membership is decided, used to scope profiles, software, and policies to a subset of hosts.
+- `tools/` — repo tooling, not deployed: `check-conventions.py`, `update-gitops-skill.sh`, and `mdm-commands/` (sends an MDM command to hosts failing a policy, run by `.github/workflows/mdm-command-on-policy-failure.yml`).
+- `docs/` — runbooks and lab write-ups, not deployed.
+- `platforms/<macos|windows|linux|ios|ipados|android|all>/` — the actual artifacts, one flat folder per kind (no sub-folders):
   - `policies/` — compliance policies (osquery-based checks with a resolution)
   - `reports/` — data collection reports
   - `software/` — custom package definitions
@@ -35,7 +47,14 @@ A fleet's YAML file pulls files from these platform folders with glob patterns, 
 
 ## Validating changes
 
-Dry-run before committing, the same way CI does for pull requests:
+Run all three, in order:
+
+```bash
+python3 tools/check-conventions.py
+python3 .claude/skills/fleet-gitops/scripts/validate.py
+```
+
+Then dry-run the same way CI does for pull requests (needs `FLEET_URL` and the CSE instance as fleetctl's default context; otherwise the PR's CI dry run is the gate):
 
 ```bash
 fleetctl gitops -f default.yml $(for f in fleets/*.yml; do echo -f "$f"; done) --dry-run
@@ -48,7 +67,7 @@ fleetctl gitops -f default.yml $(for f in fleets/*.yml; do echo -f "$f"; done) -
 
 ## Skills
 
-- `/fleet-gitops` — validates queries, profiles, software, and DDM declarations in this repo against upstream references (Apple, Microsoft, Android, Fleet's own schema) before writing them.
+- `/fleet-gitops` — vendored verbatim from [fleetdm/fleet `.claude/skills/fleet-gitops`](https://github.com/fleetdm/fleet/tree/main/.claude/skills/fleet-gitops). Don't edit it here; refresh it from upstream instead. Put repo-specific rules in `CONVENTIONS.md`.
 - Apple profile authoring (optional): install [contour](https://github.com/macadmins/contour), a community CLI that generates `.mobileconfig`/DDM JSON from Apple's schema, and run `contour setup-agent` to add its own skill and command index here. Contour isn't part of Fleet and isn't installed by default.
 
 ## References

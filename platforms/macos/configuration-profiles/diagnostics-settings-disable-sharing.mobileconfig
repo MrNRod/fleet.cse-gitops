@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+	<key>PayloadIdentifier</key>
+	<string>com.fleetdm.cse.diagnostics-settings-disable-sharing</string>
+	<key>PayloadUUID</key>
+	<string>B3783917-F1C1-4F01-B23E-9D9E51127C90</string>
+	<key>PayloadDisplayName</key>
+	<string>Diagnostics - Settings - Disable Sharing</string>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>PayloadType</key>
+			<string>com.apple.SubmitDiagInfo</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>PayloadIdentifier</key>
+			<string>com.fleetdm.cse.diagnostics-settings-disable-sharing.submitdiaginfo</string>
+			<key>PayloadUUID</key>
+			<string>F798A03A-3095-4EDE-A8D1-0C378D2340F9</string>
+			<key>AutoSubmit</key>
+			<false/>
+			<key>PayloadDisplayName</key>
+			<string>SubmitDiagInfo</string>
+			<key>PayloadOrganization</key>
+			<string>Fleet CSE</string>
+		</dict>
+	</array>
+	<key>PayloadDescription</key>
+	<string>Turns off sharing of diagnostics and usage data with Apple and app developers (CIS Level 1).</string>
+	<key>PayloadEnabled</key>
+	<true/>
+	<key>PayloadOrganization</key>
+	<string>Fleet CSE</string>
+	<key>PayloadRemovalDisallowed</key>
+	<true/>
+	<key>PayloadScope</key>
+	<string>System</string>
+</dict>
+</plist>

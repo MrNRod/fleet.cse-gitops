@@ -1,0 +1,9 @@
+- name: macOS - Top memory-consuming apps
+  automations_enabled: false
+  description: Collects the top 10 applications or processes consuming the most memory.
+  discard_data: false
+  interval: 3600
+  logging: snapshot
+  observer_can_run: true
+  platform: darwin
+  query: SELECT pid, name, ROUND((total_size * '10e-7'), 2) AS memory_used FROM processes ORDER BY total_size DESC LIMIT 10;

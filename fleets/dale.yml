@@ -107,7 +107,7 @@ controls:
   ###########################################################
   apple_settings:
     configuration_profiles:
-      - path: "../platforms/macos/configuration-profiles/Allow fleetd Full Disk Access.mobileconfig"
+      - path: "../platforms/macos/configuration-profiles/fleetd-pppc-full-disk-access.mobileconfig"
       - path: "../platforms/macos/declaration-profiles/softwareupdate-defer-macos-major.json"
   windows_settings:
     configuration_profiles:

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+	<key>PayloadIdentifier</key>
+	<string>com.fleetdm.cse.claude-settings</string>
+	<key>PayloadUUID</key>
+	<string>3CA236D8-6A60-4D01-9E98-031B8E4D8D50</string>
+	<key>PayloadDisplayName</key>
+	<string>Claude - Settings</string>
+	<key>PayloadDescription</key>
+	<string>Claude desktop app restrictions: in-app auto-updates off (Fleet manages the version) and Claude Code for desktop, desktop extensions, local-dev MCP and secure-VM features disabled.</string>
+	<key>PayloadEnabled</key>
+	<true/>
+	<key>PayloadOrganization</key>
+	<string>Fleet CSE</string>
+	<key>PayloadRemovalDisallowed</key>
+	<true/>
+	<key>PayloadScope</key>
+	<string>System</string>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>PayloadType</key>
+			<string>com.anthropic.claudefordesktop</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>PayloadIdentifier</key>
+			<string>com.fleetdm.cse.claude-settings.claudefordesktop</string>
+			<key>PayloadUUID</key>
+			<string>F4A50D2F-B458-4143-807D-A053F24A0A5D</string>
+			<key>PayloadDisplayName</key>
+			<string>Claude Desktop Enterprise Restrictions</string>
+			<key>PayloadOrganization</key>
+			<string>Fleet CSE</string>
+			<key>disableAutoUpdates</key>
+			<true/>
+			<key>isClaudeCodeForDesktopEnabled</key>
+			<false/>
+			<key>isDesktopExtensionDirectoryEnabled</key>
+			<false/>
+			<key>isDesktopExtensionEnabled</key>
+			<false/>
+			<key>isLocalDevMcpEnabled</key>
+			<false/>
+			<key>secureVmFeaturesEnabled</key>
+			<false/>
+		</dict>
+	</array>
+</dict>
+</plist>

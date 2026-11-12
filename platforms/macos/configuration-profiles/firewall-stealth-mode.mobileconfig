@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+	<key>PayloadIdentifier</key>
+	<string>com.fleetdm.cse.firewall-stealth-mode</string>
+	<key>PayloadUUID</key>
+	<string>1874F09A-950B-47F8-B25E-AF22330B1291</string>
+	<key>PayloadDisplayName</key>
+	<string>Firewall - Stealth Mode</string>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>PayloadType</key>
+			<string>com.apple.security.firewall</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>PayloadIdentifier</key>
+			<string>com.fleetdm.cse.firewall-stealth-mode.firewall</string>
+			<key>PayloadUUID</key>
+			<string>A9275FBB-59BA-4A1C-827C-A1A55D4F9965</string>
+			<key>Applications</key>
+			<array/>
+			<key>BlockAllIncoming</key>
+			<false/>
+			<key>EnableFirewall</key>
+			<true/>
+			<key>EnableStealthMode</key>
+			<true/>
+			<key>PayloadDisplayName</key>
+			<string>Firewall</string>
+			<key>PayloadOrganization</key>
+			<string>Fleet CSE</string>
+		</dict>
+	</array>
+	<key>PayloadDescription</key>
+	<string>Turns on the application firewall with stealth mode (CIS Level 1).</string>
+	<key>PayloadEnabled</key>
+	<true/>
+	<key>PayloadOrganization</key>
+	<string>Fleet CSE</string>
+	<key>PayloadRemovalDisallowed</key>
+	<true/>
+	<key>PayloadScope</key>
+	<string>System</string>
+</dict>
+</plist>

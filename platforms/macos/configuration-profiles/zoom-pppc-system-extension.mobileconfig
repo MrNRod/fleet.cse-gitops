@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+	<key>PayloadIdentifier</key>
+	<string>com.fleetdm.cse.zoom-pppc-system-extension</string>
+	<key>PayloadUUID</key>
+	<string>F85F0F1F-8375-44DD-BEEE-C8F7E24FADC0</string>
+	<key>PayloadDisplayName</key>
+	<string>Zoom - Privacy Preferences and System Extension</string>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>PayloadType</key>
+			<string>com.apple.TCC.configuration-profile-policy</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>PayloadIdentifier</key>
+			<string>com.fleetdm.cse.zoom-pppc-system-extension.pppc</string>
+			<key>PayloadUUID</key>
+			<string>99716530-7096-4D55-B178-66993D1EB1B3</string>
+			<key>PayloadDisplayName</key>
+			<string>Privacy Preferences Policy Control</string>
+			<key>PayloadEnabled</key>
+			<true/>
+			<key>PayloadOrganization</key>
+			<string>Fleet CSE</string>
+			<key>Services</key>
+			<dict>
+				<key>ScreenCapture</key>
+				<array>
+					<dict>
+						<key>Authorization</key>
+						<string>AllowStandardUserToSetSystemService</string>
+						<key>Identifier</key>
+						<string>us.zoom.xos</string>
+						<key>CodeRequirement</key>
+						<string>identifier "us.zoom.xos" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = BJ4HAAB9B3</string>
+						<key>IdentifierType</key>
+						<string>bundleID</string>
+						<key>StaticCode</key>
+						<false/>
+					</dict>
+				</array>
+				<key>Accessibility</key>
+				<array>
+					<dict>
+						<key>Identifier</key>
+						<string>us.zoom.xos</string>
+						<key>CodeRequirement</key>
+						<string>identifier "us.zoom.xos" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = BJ4HAAB9B3</string>
+						<key>IdentifierType</key>
+						<string>bundleID</string>
+						<key>StaticCode</key>
+						<false/>
+						<key>Allowed</key>
+						<true/>
+					</dict>
+				</array>
+				<key>SystemPolicyAllFiles</key>
+				<array>
+					<dict>
+						<key>Identifier</key>
+						<string>us.zoom.xos</string>
+						<key>CodeRequirement</key>
+						<string>identifier "us.zoom.xos" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = BJ4HAAB9B3</string>
+						<key>IdentifierType</key>
+						<string>bundleID</string>
+						<key>StaticCode</key>
+						<false/>
+						<key>Allowed</key>
+						<true/>
+					</dict>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>PayloadType</key>
+			<string>com.apple.system-extension-policy</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>PayloadIdentifier</key>
+			<string>com.fleetdm.cse.zoom-pppc-system-extension.system-extension</string>
+			<key>PayloadUUID</key>
+			<string>2004B2E1-4974-4EBE-9D99-2F22B29EAA1B</string>
+			<key>AllowUserOverrides</key>
+			<true/>
+			<key>AllowedSystemExtensions</key>
+			<dict>
+				<key>BJ4HAAB9B3</key>
+				<array>
+					<string>us.zoom.xos</string>
+				</array>
+			</dict>
+			<key>PayloadDisplayName</key>
+			<string>System Extensions</string>
+			<key>PayloadEnabled</key>
+			<true/>
+			<key>PayloadOrganization</key>
+			<string>Fleet CSE</string>
+		</dict>
+	</array>
+	<key>PayloadDescription</key>
+	<string>Zoom: Privacy Preferences grants and system extension approval.</string>
+	<key>PayloadEnabled</key>
+	<true/>
+	<key>PayloadOrganization</key>
+	<string>Fleet CSE</string>
+	<key>PayloadRemovalDisallowed</key>
+	<true/>
+	<key>PayloadScope</key>
+	<string>System</string>
+</dict>
+</plist>

@@ -1,0 +1,9 @@
+- name: macOS - Laptops with failing batteries
+  automations_enabled: false
+  description: Detects laptops with under-performing or failing batteries.
+  discard_data: false
+  interval: 604800
+  logging: snapshot
+  observer_can_run: true
+  platform: darwin
+  query: SELECT * FROM battery WHERE health != 'Good' AND condition NOT IN ('', 'Normal');

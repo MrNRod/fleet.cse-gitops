@@ -1,0 +1,21 @@
+- name: Linux - NIST SC-28 root filesystem encrypted with LUKS
+  query: |
+    SELECT 1 FROM disk_encryption
+    WHERE name LIKE '/dev/dm-%' AND encrypted = 1;
+  description: |
+    NIST 800-53 SC-28, protection of information at rest. Passes when a
+    device-mapper target (/dev/dm-*) is LUKS-encrypted, which on a standard
+    full-disk-encryption install is the mapping the root filesystem mounts
+    from. Fails when no encrypted device-mapper target exists.
+
+    The check reads osquery's disk_encryption table, which maps each block
+    device to its encryption state. One query is the audit evidence: same
+    query, same answer, every host, every check-in.
+  resolution: |
+    Re-provision the host with full-disk encryption. LUKS cannot be added
+    in place without reformatting, so remediate through the build pipeline
+    (cryptsetup luksFormat in the kickstart or image build), not on the
+    running host. Confirm with: SELECT name, encrypted, type FROM
+    disk_encryption;
+  platform: linux
+  critical: false

@@ -1,0 +1,16 @@
+{
+  "Type": "com.apple.configuration.softwareupdate.settings",
+  "Identifier": "com.fleetdm.cse.softwareupdate-settings-automatic",
+  "Payload": {
+    "AllowStandardUserOSUpdates": true,
+    "AutomaticActions": {
+      "Download": "AlwaysOn",
+      "InstallOSUpdates": "Allowed",
+      "InstallSecurityUpdate": "AlwaysOn"
+    },
+    "Notifications": false,
+    "RapidSecurityResponse": {
+      "Enable": true
+    }
+  }
+}

@@ -1,0 +1,60 @@
+# OpenClaw (clawdbot / moltbot / clawd) detection for macOS hosts.
+# Reference: https://fleetdm.com/guides/mitigation-assets-and-detection-patterns-for-ai-agents-like-openclaw
+#
+# Detection policies invert the usual sense: a clean host returns a row and
+# passes, a host showing the threat returns zero rows and fails. Wire a
+# failing-policy webhook to alert. No run_script is attached: removing a
+# live agent is a response decision, and the guide's hardening path is
+# `openclaw security audit --deep --fix`, run deliberately.
+
+- name: macOS - OpenClaw AI agent not detected
+  critical: true
+  query: |
+    SELECT 1 WHERE (
+        ((SELECT COUNT(*) FROM processes
+            WHERE name LIKE '%openclaw%' OR name LIKE '%clawdbot%'
+               OR name LIKE '%moltbot%' OR name = 'clawd'
+               OR cmdline LIKE '%openclaw%' OR cmdline LIKE '%clawdbot%'
+               OR cmdline LIKE '%moltbot%') > 0)
+      + ((SELECT COUNT(*) FROM listening_ports
+            WHERE port IN (18789, 18793)) > 0)
+      + ((SELECT COUNT(*) FROM launchd
+            WHERE label IN ('ai.openclaw.gateway', 'com.clawdbot.gateway',
+                            'bot.molt.gateway')) > 0)
+      + ((SELECT COUNT(*) FROM file
+            WHERE path LIKE '/Users/%/.openclaw/openclaw.json'
+               OR path LIKE '/Users/%/.clawdbot/openclaw.json'
+               OR path LIKE '/Users/%/.moltbot/openclaw.json') > 0)
+    ) <= 2;
+  description: |
+    Scores four independent OpenClaw indicators and fails when three or more
+    are present at once: a matching process, a gateway listener on TCP 18789
+    or 18793, an OpenClaw launchd label, and an openclaw.json config file.
+    Any one alone keeps the host passing, which is the threshold the
+    OpenClaw guide uses to avoid false positives. Three together is the
+    running, listening, persistent, installed agent.
+  resolution: |
+    Open the "macOS - OpenClaw" investigation and threat hunting reports to
+    see which indicators fired. Confirm the agent, then follow the OpenClaw
+    guide: isolate the host, capture the config and session directories, and
+    remediate with `openclaw security audit --deep --fix`.
+  platform: darwin
+
+- name: macOS - OpenClaw launchd persistence absent
+  critical: true
+  query: |
+    SELECT 1 WHERE NOT EXISTS (
+      SELECT 1 FROM launchd
+      WHERE label IN ('ai.openclaw.gateway', 'com.clawdbot.gateway',
+                      'bot.molt.gateway')
+    );
+  description: |
+    Fails when an OpenClaw launchd job exists (label ai.openclaw.gateway,
+    com.clawdbot.gateway, or bot.molt.gateway). A launchd job with that
+    label is high-confidence persistence: the gateway is set to relaunch at
+    load. Single-indicator by design, separate from the scored policy.
+  resolution: |
+    Identify the job in the "macOS - OpenClaw launchd persistence" report
+    (path shows the plist). Unload it with launchctl, remove the plist and
+    the agent's config directory.
+  platform: darwin

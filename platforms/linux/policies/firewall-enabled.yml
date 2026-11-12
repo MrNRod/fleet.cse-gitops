@@ -1,0 +1,60 @@
+# ufw on with CIS Ubuntu 24.04 section 4.2 defaults (deny incoming, allow
+# outgoing, deny routed, loopback rules). Default-deny cuts off anything the
+# host serves to the network, so scope this to a pilot label first, e.g.
+#   labels_include_any:
+#     - <your pilot label>
+# ufw writes its own files, so the query reads them: ufw.conf (on or off),
+# /etc/default/ufw (default policies) and user.rules / user6.rules (the
+# loopback rules, in ufw's "### tuple ###" format). osquery cannot read the
+# nftables rule set itself. Files are matched with LIKE: on osquery 5.24 a
+# file_lines read of a missing file by exact path fails the whole query.
+- name: Linux - Firewall on and blocks incoming connections
+  description: >-
+    This computer's firewall (ufw) must be on, block incoming connections
+    that this computer did not start, and drop traffic routed through it.
+    Outgoing connections are allowed.
+  resolution: >-
+    IT will turn the firewall on. Apps you open keep working; a service you
+    run that other computers connect to (a development server, for example)
+    stops being reachable from other computers until IT adds a rule for it.
+  query: |-
+    SELECT 1
+    WHERE EXISTS (SELECT 1 FROM deb_packages WHERE name = 'ufw')
+      AND NOT EXISTS (SELECT 1 FROM deb_packages WHERE name = 'iptables-persistent')
+      AND EXISTS (
+        SELECT 1 FROM systemd_units
+        WHERE id = 'ufw.service' AND active_state = 'active' AND unit_file_state = 'enabled'
+      )
+      AND EXISTS (
+        SELECT 1 FROM file_lines
+        WHERE path LIKE '/etc/ufw/ufw.conf' AND replace(line, ' ', '') = 'ENABLED=yes'
+      )
+      AND (
+        SELECT COUNT(DISTINCT replace(line, ' ', '')) FROM file_lines
+        WHERE path LIKE '/etc/default/ufw'
+          AND replace(line, ' ', '') IN (
+            'IPV6=yes',
+            'DEFAULT_INPUT_POLICY="DROP"',
+            'DEFAULT_OUTPUT_POLICY="ACCEPT"',
+            'DEFAULT_FORWARD_POLICY="DROP"')
+      ) = 4
+      AND (
+        SELECT COUNT(DISTINCT substr(line, 15, 45)) FROM file_lines
+        WHERE path LIKE '/etc/ufw/user.rules'
+          AND (line LIKE '### tuple ### allow any any 0.0.0.0/0 any 0.0.0.0/0 in\_lo%' ESCAPE '\'
+            OR line LIKE '### tuple ### allow any any 0.0.0.0/0 any 0.0.0.0/0 out\_lo%' ESCAPE '\'
+            OR line LIKE '### tuple ### deny any any 0.0.0.0/0 any 127.0.0.0/8 in')
+      ) = 3
+      AND (
+        SELECT COUNT(DISTINCT substr(line, 15, 45)) FROM file_lines
+        WHERE path LIKE '/etc/ufw/user6.rules'
+          AND (line LIKE '### tuple ### allow any any ::/0 any ::/0 in\_lo%' ESCAPE '\'
+            OR line LIKE '### tuple ### allow any any ::/0 any ::/0 out\_lo%' ESCAPE '\'
+            OR line LIKE '### tuple ### deny any any ::/0 any ::1 in')
+      ) = 3;
+  platform: linux
+  critical: false
+  calendar_events_enabled: false
+  continuous_automations_enabled: true
+  run_script:
+    path: ../scripts/enable-ufw-firewall.sh

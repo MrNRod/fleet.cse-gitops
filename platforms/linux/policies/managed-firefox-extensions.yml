@@ -1,5 +1,8 @@
 - name: Linux - Managed Firefox Extensions
   platform: linux
+  description: Checks that the managed Firefox extension policy (/etc/firefox/policies/policies.json) is present, so only approved extensions can be installed.
+  resolution: Fleet writes the policy file automatically. If this keeps failing, check that the script ran in the host's activity feed, then restart Firefox.
+  critical: false
   query: SELECT 1 FROM file WHERE path = '/etc/firefox/policies/policies.json';
   run_script:
     path: ../scripts/firefox-extensions.sh

@@ -1,0 +1,6 @@
+# Manual label. No `hosts:` key on purpose: with it omitted, GitOps leaves membership alone,
+# so hosts can be added in the Fleet UI or by an external job via the REST API.
+# Never write `hosts: []` here; an empty list removes every member on the next GitOps run.
+- name: macOS hosts migrating from Jamf
+  description: Hand-picked Macs being migrated from Jamf Pro to Fleet. Pair with platforms/macos/scripts/remove-jamf-agent.sh.
+  label_membership_type: manual

@@ -1,0 +1,15 @@
+# Patch policy for Google Chrome (Fleet-maintained app).
+#
+# DEPENDS ON: `google-chrome/darwin` listed under this fleet's software.fleet_maintained_apps.
+# install_software only works when that app is in the same fleet as this policy.
+#
+# `type: patch` generates the version check from the FMA metadata: a host fails only when
+# Google Chrome is installed and older than the latest maintained version (a missing app passes).
+# patch_when_closed: Fleet installs only while the app is not running.
+- name: macOS - Google Chrome up to date
+  type: patch
+  fleet_maintained_app_slug: google-chrome/darwin
+  install_software: true
+  patch_when_closed: true
+  description: Checks that Google Chrome is up to date if installed.
+  resolution: Fleet updates Google Chrome automatically once it is closed.

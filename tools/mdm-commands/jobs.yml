@@ -1,0 +1,17 @@
+# Policy -> MDM command jobs, run by tools/mdm-commands/send.py and the
+# "MDM command on policy failure" GitHub Actions workflow.
+#
+# Each job acts on every fleet that includes a policy with exactly this `policy` name, so a
+# teammate opts in by adding the policy file to their fleet. List `fleets:` to restrict it.
+#
+#   name:      shown in logs; pass to --job to run one job
+#   policy:    the policy's exact `name:` as Fleet shows it
+#   command:   command plist template (CommandUUID is replaced at send time)
+#   platforms: darwin | ios | ipados (default [darwin])
+#   fleets:    optional list of fleet names
+#   enabled:   false skips it on scheduled runs (still runnable with --job)
+
+- name: Enable Remote Desktop
+  policy: macOS - Remote Management enabled
+  command: platforms/macos/commands/enable-remote-desktop.plist
+  platforms: [darwin]

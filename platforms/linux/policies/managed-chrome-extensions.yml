@@ -1,5 +1,8 @@
 - name: Linux - Managed Chrome Extensions
   platform: linux
+  description: Checks that the managed Chrome extension policy (/etc/opt/chrome/policies/managed/fleet-extensions.json) is present, so only approved extensions can be installed.
+  resolution: Fleet writes the policy file automatically. If this keeps failing, check that the script ran in the host's activity feed, then restart Chrome.
+  critical: false
   query: SELECT 1 FROM file WHERE path = '/etc/opt/chrome/policies/managed/fleet-extensions.json';
   run_script:
     path: ../scripts/chrome-extensions.sh

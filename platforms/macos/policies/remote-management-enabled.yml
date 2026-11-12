@@ -1,0 +1,15 @@
+# Remote Management (Apple Remote Desktop / Screen Sharing) is on.
+#
+# Since macOS 12.1 nothing on the host (kickstart, a Fleet script) can turn Remote Management
+# on; only Apple's EnableRemoteDesktop MDM command can. GitOps can't declare MDM commands, so
+# tools/mdm-commands/ (job "Enable Remote Desktop") sends it to hosts failing THIS policy, in
+# every fleet that includes it. The runner finds the policy by name: renaming it breaks the job.
+#
+# There's no osquery table for "Remote Management is on"; ARDAgent runs persistently once it is
+# enabled, so its presence is the standard signal.
+- name: macOS - Remote Management enabled
+  platform: darwin
+  query: SELECT 1 FROM processes WHERE name = 'ARDAgent';
+  critical: false
+  description: Checks that Apple Remote Desktop / Screen Sharing is on, so IT can reach this Mac remotely.
+  resolution: Fleet sends Apple's EnableRemoteDesktop MDM command to Macs failing this check. If it keeps failing, check the command's result on the host's activity feed.

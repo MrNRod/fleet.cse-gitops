@@ -1,49 +1,109 @@
-# Fleet
+# Fleet CSE GitOps
 
-These files allow you to configure, patch, and secure computing devices for your organization.
+The Fleet CSE team's shared test instance, configured entirely from this repo. Each of us has a
+sandbox fleet to try things in, and we share one library of policies, reports, profiles, scripts,
+and labels that anyone can pull into their fleet.
 
-Whether you're making changes by hand or spinning them up from Slack or Teams using a tool like Claude or Kilo Code _(e.g. "Make our endpoints compliant with ISO 27001" or "Fix CVE-2026-XXXX")_, your team reviews, merges, and it deploys to thousands of endpoints in seconds. This makes it straightforward to instantly rollback a change, and history is fully tracked.
+> **This repo is public.** Nothing from a customer engagement goes in unless it has been sanitized:
+> no customer names, domains, hostnames, people, IPs, SSIDs, tenant IDs, certificates, or secrets.
+> See [CONVENTIONS.md § 5](CONVENTIONS.md#5-customer-data-never-in-git).
 
-You can read more about the anatomy of these files and what they do in [Fleet's documentation](https://fleetdm.com/docs/configuration/yaml-files). You can also opt to manage particular aspects of Fleet in the graphical user interface _instead_, such as software versions or labels.
+## How changes deploy
 
-> Unsure? Talk to a human at fleetdm.com/support
+| You do | What happens |
+|---|---|
+| Push to `main` | GitHub Actions runs `fleetctl gitops` and **applies it to the live instance** within minutes. |
+| Open a pull request | The same workflow runs a **dry run only**. This is the only server-side check before an apply. |
+| Nightly, 06:00 UTC | The workflow re-applies `main`, so changes made in the Fleet UI are reverted to what's in git. |
 
-## How to use
+The apply runs with `--delete-other-fleets`: **a fleet that isn't a file in `fleets/` gets deleted**,
+and **changing a fleet's `name:` deletes and recreates it**, which drops its hosts to Unassigned. To
+rename one, follow [docs/runbooks/fleet-rename.md](docs/runbooks/fleet-rename.md).
 
-1. Install fleetctl. [Learn how](https://fleetdm.com/guides/fleetctl#installing-fleetctl).
+## Fleets
 
-2. Open your Terminal, run `fleetctl new`, and follow instructions in the output.
+| File | Fleet | Owner |
+|---|---|---|
+| `fleets/adam.yml` | Adam's Adequate Fleet | Adam |
+| `fleets/dale.yml` | Dale's Fleet | Dale |
+| `fleets/gray.yml` | Gray's Fleet | Gray |
+| `fleets/josh.yml` | Josh's All-Star Fleet | Josh |
+| `fleets/mason.yml` | Mason's Mega Fleet | Mason |
+| `fleets/matt.yml` | Matt's Fleet | Matt |
+| `fleets/noel.yml` | Noel's Fleet | Noel |
+| `fleets/ryn.yml` | Ryn's Fleet | Ryn |
+| `fleets/workstations.yml` | Workstations | Team: only validated, demo-ready config |
 
-## Tips
+Your fleet file is your sandbox. Don't edit someone else's without asking. `fleets/adam.yml` is the
+most complete example of wiring the library together; copy entries from it.
 
-The action (GitHub) or pipeline (GitLab) runs will fail until you add `FLEET_URL` and `FLEET_API_TOKEN` as [secrets (GitHub)](#github) or [CI/CD variables (GitLab)](#gitlab).
+## Layout
 
-Set `FLEET_URL` to your Fleet instance's URL (ex. https://organization.fleet.com).
+```
+default.yml            org settings (one team-owned file) + label registration
+fleets/                one file per fleet
+labels/dynamic/        SQL-based labels
+labels/manual/         hand-picked host lists
+labels/host-vitals/    IdP group / department labels
+platforms/<platform>/  the shared library, one flat folder per kind:
+                       policies/ reports/ scripts/ software/ configuration-profiles/
+                       declaration-profiles/ enrollment-profiles/ commands/
+tools/                 repo tooling (not deployed)
+docs/runbooks/         how-tos for risky operations
+```
 
-If you're using Fleet Free, set the API-only user's role to global admin.
+Platforms are `macos`, `windows`, `linux`, `ios`, `ipados`, `android`, and `all` (cross-platform).
+Naming rules for every kind of file are in [CONVENTIONS.md](CONVENTIONS.md).
 
-### GitHub
+## Making a change
 
-To add GitHub secrets, see [the GitHub docs](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository).
+1. **Find or add the artifact** under `platforms/<platform>/<kind>/`. Check the library first: it may
+   already exist.
+2. **Wire it into your fleet** with a `path:` entry in `fleets/<you>.yml`.
+3. **Changing a shared file?** First check who else uses it:
+   ```bash
+   python3 tools/check-conventions.py --who-uses platforms/macos/policies/rosetta-installed.yml
+   ```
+4. **Check it locally:**
+   ```bash
+   python3 tools/check-conventions.py
+   python3 .claude/skills/fleet-gitops/scripts/validate.py
+   ```
+   The first command checks naming and layout and scans for leaks. The second is Fleet's own static
+   validator (YAML, paths, labels, osquery tables, Fleet-maintained app slugs, and profile structure).
+   Optional extras are [flint](https://github.com/headmin/fleet-editor-extensions) (`flint dry-run`)
+   and [contour](https://github.com/macadmins/contour) (`contour profile validate <file>.mobileconfig`).
+5. **Commit small, from GitHub Desktop.** Make one change per commit and read every file's diff first.
+   Use a pull request when you want the server dry run before it goes live.
 
-In GitHub, enable the `Apply latest configuration to Fleet` GitHub Actions workflow, and run workflow manually. Now, when anyone pushes a new commit to the default branch, the action will run and update Fleet. For pull requests, the workflow will do a dry run only.
+### Customer names: local denylist
 
-### GitLab
+You can't commit a list of customer names to a public repo. Instead, put the terms from your own
+engagements in `.leakcheck.local` at the repo root, one per line. It's gitignored, and
+`check-conventions.py` reads it automatically and fails on any match.
 
-To add GitLab CI/CD variables, see [the Gitlab docs](https://docs.gitlab.com/ee/ci/variables/#define-a-cicd-variable-in-the-ui).
+## Tools
 
-To ensure your Fleet configuration stays up to date even when there are no new commits, set up a scheduled pipeline:
-   - In your GitLab project, go to the left sidebar and navigate to **Build > Pipeline schedules**. (In some GitLab versions, this may appear as **CI/CD > Schedules**.)
-   - Click **Create a new pipeline schedule** (or **Schedule a new pipeline**).
-   - Fill in the form:
-      - **Description**: e.g., `Daily GitOps sync`
-      - **Cron timezone**: e.g., `[UTC 0] UTC`
-      - **Interval pattern**: e.g., Custom: `0 6 * * *` (runs nightly at 6AM UTC)
-      - **Target branch or tag**: your default branch (e.g., `main`)
-   - Click **Create pipeline schedule**.
+| Tool | What it does |
+|---|---|
+| [`tools/check-conventions.py`](tools/check-conventions.py) | Checks naming, layout, and in-file names, and scans for leaks. Also answers "who uses this file?" |
+| [`tools/update-gitops-skill.sh`](tools/update-gitops-skill.sh) | Refreshes `.claude/skills/fleet-gitops` from [fleetdm/fleet](https://github.com/fleetdm/fleet/tree/main/.claude/skills/fleet-gitops). The skill is vendored verbatim; don't edit it here. |
+| [`tools/mdm-commands/`](tools/mdm-commands/README.md) | Sends an MDM command to hosts failing a policy, for fixes GitOps can't make. Example: `EnableRemoteDesktop` for the "macOS - Remote Management enabled" policy. Runs from the **MDM command on policy failure** workflow. It does nothing until its API token is set up, and defaults to a dry run. |
 
-## What is Fleet?
+## CI setup
 
-Fleet is high-agency device management software. It is especially popular with [IT and security teams who manage lots of endpoints](https://fleetdm.com/customers).
+| Secret / variable | Used by | Notes |
+|---|---|---|
+| `FLEET_URL` (secret) | Both workflows | Server root, e.g. `https://fleet.example.com` |
+| `FLEET_API_TOKEN` (secret) | GitOps apply | GitOps API-only user |
+| `FLEET_MDM_SSO_METADATA` (secret) | GitOps apply | IdP metadata XML for end-user authentication |
+| `MDM_COMMANDS_API_TOKEN` (secret in the `mdm-commands` environment) | MDM commands | Separate API-only user, Maintainer on target fleets only. Optional. |
+| `MDM_COMMANDS_SCHEDULE` (variable) | MDM commands | `hourly`, `daily`, or `weekly`; unset means manual runs only |
 
-All source code [is public](https://fleetdm.com/transparency) and the product is supported by a [company called Fleet Device Management](https://fleetdm.com/handbook/company) that enrolls millions of laptops, tablets, phones, servers, and other computing devices in 90+ countries.
+## References
+
+- [GitOps YAML reference](https://fleetdm.com/docs/configuration/yaml-files)
+- [Fleet REST API](https://fleetdm.com/docs/rest-api/rest-api)
+- [Fleet-maintained app catalog](https://github.com/fleetdm/fleet/tree/main/ee/maintained-apps)
+- [osquery tables](https://fleetdm.com/tables)
+- [Fleet solutions library](https://github.com/fleetdm/fleet/tree/main/docs/solutions): vetted CIS profiles, policies, and scripts to adapt

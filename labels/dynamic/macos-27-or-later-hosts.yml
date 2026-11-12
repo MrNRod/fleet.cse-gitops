@@ -1,0 +1,5 @@
+- name: macOS 27 or later hosts
+  description: macOS hosts running version 27 or later. Targets by OS version only; combine with "Apple Silicon macOS hosts" via labels_include_all if you need both.
+  query: SELECT 1 FROM os_version WHERE major >= 27;
+  label_membership_type: dynamic
+  platform: darwin

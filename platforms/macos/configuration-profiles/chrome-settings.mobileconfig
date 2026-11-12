@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+	<key>PayloadIdentifier</key>
+	<string>com.fleetdm.cse.chrome-settings</string>
+	<key>PayloadUUID</key>
+	<string>EC63A371-4175-4A63-BA2B-490B3B866184</string>
+	<key>PayloadDisplayName</key>
+	<string>Google Chrome - Settings</string>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>PayloadType</key>
+			<string>com.apple.ManagedClient.preferences</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>PayloadIdentifier</key>
+			<string>com.fleetdm.cse.chrome-settings.com.google.chrome</string>
+			<key>PayloadUUID</key>
+			<string>B1D09E8F-3551-42BC-826A-9C949C6E08EC</string>
+			<key>PayloadContent</key>
+			<dict>
+				<key>com.google.Chrome</key>
+				<dict>
+					<key>Forced</key>
+					<array>
+						<dict>
+							<key>mcx_preference_settings</key>
+							<dict>
+								<key>SpellCheckServiceEnabled</key>
+								<false/>
+								<key>SpellcheckEnabled</key>
+								<false/>
+								<key>TranslateEnabled</key>
+								<false/>
+							</dict>
+						</dict>
+					</array>
+				</dict>
+			</dict>
+			<key>PayloadDisplayName</key>
+			<string>Google Chrome Managed Preferences (com.google.Chrome)</string>
+			<key>PayloadOrganization</key>
+			<string>Fleet CSE</string>
+		</dict>
+	</array>
+	<key>PayloadDescription</key>
+	<string>Google Chrome managed preferences: spell check service and translate disabled.</string>
+	<key>PayloadEnabled</key>
+	<true/>
+	<key>PayloadOrganization</key>
+	<string>Fleet CSE</string>
+	<key>PayloadRemovalDisallowed</key>
+	<true/>
+	<key>PayloadScope</key>
+	<string>System</string>
+</dict>
+</plist>

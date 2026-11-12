@@ -1,0 +1,20 @@
+- name: macOS - Admin users
+  description: >-
+    Every local account with UID 500 or above in the admin group, per host.
+    If end users are standard by default, anyone listed here besides
+    _fleetadmin was elevated (or is an admin account a previous MDM left
+    behind). Accounts below UID 500 are macOS system accounts and are left
+    out.
+  query: |-
+    SELECT u.username, u.uid, u.description AS full_name, u.directory
+    FROM users u
+    JOIN user_groups ug ON ug.uid = u.uid
+    JOIN groups g ON g.gid = ug.gid
+    WHERE g.groupname = 'admin'
+      AND u.uid >= 500
+    ORDER BY u.uid;
+  interval: 3600
+  observer_can_run: true
+  automations_enabled: false
+  logging: snapshot
+  platform: darwin

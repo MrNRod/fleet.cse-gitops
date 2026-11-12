@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+	<key>PayloadIdentifier</key>
+	<string>com.fleetdm.cse.microsoft-autoupdate-settings</string>
+	<key>PayloadUUID</key>
+	<string>ABDD9531-2413-47DC-8AA4-FAD65D646445</string>
+	<key>PayloadDisplayName</key>
+	<string>Microsoft AutoUpdate - Settings</string>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>PayloadType</key>
+			<string>com.apple.ManagedClient.preferences</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>PayloadIdentifier</key>
+			<string>com.fleetdm.cse.microsoft-autoupdate-settings.com.microsoft.autoupdate2</string>
+			<key>PayloadUUID</key>
+			<string>212D008B-FB7F-48C5-A732-01B02631F10B</string>
+			<key>PayloadContent</key>
+			<dict>
+				<key>com.microsoft.autoupdate2</key>
+				<dict>
+					<key>Forced</key>
+					<array>
+						<dict>
+							<key>mcx_preference_settings</key>
+							<dict>
+								<key>AcknowledgedDataCollectionPolicy</key>
+								<string>RequiredDataOnly</string>
+								<key>ChannelName</key>
+								<string>Current</string>
+								<key>DisableInsiderCheckbox</key>
+								<true/>
+								<key>HowToCheck</key>
+								<string>AutomaticDownload</string>
+								<key>IgnoreUIOpenAfterInstall</key>
+								<true/>
+								<key>UpdateCheckFrequency</key>
+								<integer>120</integer>
+								<key>UpdateDeadline.DaysBeforeForcedQuit</key>
+								<integer>5</integer>
+								<key>UpdateDeadline.StartAutomaticUpdates</key>
+								<integer>2</integer>
+								<key>Applications</key>
+								<dict>
+									<key>/Applications/Microsoft Edge.app</key>
+									<dict>
+										<key>Application ID</key>
+										<string>EDGE01</string>
+										<key>LCID</key>
+										<integer>1033</integer>
+									</dict>
+									<key>/Applications/Microsoft Excel.app</key>
+									<dict>
+										<key>Application ID</key>
+										<string>XCEL2019</string>
+										<key>LCID</key>
+										<integer>1033</integer>
+									</dict>
+									<key>/Applications/Microsoft OneNote.app</key>
+									<dict>
+										<key>Application ID</key>
+										<string>ONMC2019</string>
+										<key>LCID</key>
+										<integer>1033</integer>
+									</dict>
+									<key>/Applications/Microsoft Outlook.app</key>
+									<dict>
+										<key>Application ID</key>
+										<string>OPIM2019</string>
+										<key>LCID</key>
+										<integer>1033</integer>
+									</dict>
+									<key>/Applications/Microsoft PowerPoint.app</key>
+									<dict>
+										<key>Application ID</key>
+										<string>PPT32019</string>
+										<key>LCID</key>
+										<integer>1033</integer>
+									</dict>
+									<key>/Applications/Microsoft Remote Desktop.app</key>
+									<dict>
+										<key>Application ID</key>
+										<string>MSRD10</string>
+										<key>LCID</key>
+										<integer>1033</integer>
+									</dict>
+									<key>/Applications/Microsoft Teams.app</key>
+									<dict>
+										<key>Application ID</key>
+										<string>TEAMS10</string>
+										<key>LCID</key>
+										<integer>1033</integer>
+									</dict>
+									<key>/Applications/Microsoft Word.app</key>
+									<dict>
+										<key>Application ID</key>
+										<string>MSWD2019</string>
+										<key>LCID</key>
+										<integer>1033</integer>
+									</dict>
+									<key>/Applications/OneDrive.app</key>
+									<dict>
+										<key>Application ID</key>
+										<string>ONDR18</string>
+										<key>LCID</key>
+										<integer>1033</integer>
+									</dict>
+									<key>/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app</key>
+									<dict>
+										<key>Application ID</key>
+										<string>MSau04</string>
+										<key>LCID</key>
+										<integer>1033</integer>
+									</dict>
+								</dict>
+							</dict>
+						</dict>
+					</array>
+				</dict>
+			</dict>
+			<key>PayloadDisplayName</key>
+			<string>Microsoft AutoUpdate Managed Preferences (com.microsoft.autoupdate2)</string>
+			<key>PayloadOrganization</key>
+			<string>Fleet CSE</string>
+		</dict>
+	</array>
+	<key>PayloadDescription</key>
+	<string>Microsoft AutoUpdate (MAU): automatic download on the Current channel for the Microsoft 365 apps.</string>
+	<key>PayloadEnabled</key>
+	<true/>
+	<key>PayloadOrganization</key>
+	<string>Fleet CSE</string>
+	<key>PayloadRemovalDisallowed</key>
+	<true/>
+	<key>PayloadScope</key>
+	<string>System</string>
+</dict>
+</plist>

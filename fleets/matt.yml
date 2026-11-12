@@ -95,7 +95,7 @@ controls:
   ###########################################################
   apple_settings:
     configuration_profiles:
-      - path: "../platforms/macos/configuration-profiles/osquery-full-disk-access.mobileconfig"
+      - path: "../platforms/macos/configuration-profiles/osquery-pppc-full-disk-access.mobileconfig"
   windows_settings:
     configuration_profiles:
       - path: "../platforms/windows/configuration-profiles/chrome-extensions-blocklist.xml"

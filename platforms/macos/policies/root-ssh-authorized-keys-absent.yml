@@ -1,0 +1,15 @@
+- name: macOS - No SSH root authorized_keys
+  description: >-
+    /var/root/.ssh/authorized_keys would allow SSH login as root, bypassing
+    every other admin control on the host. It should not exist on any
+    workstation.
+  resolution: >-
+    IT to delete the file and investigate. If it appeared after a previous
+    admin elevation, the user persisted root SSH access during their admin
+    window; audit further for related persistence.
+  query: |
+    SELECT 1 WHERE NOT EXISTS (
+      SELECT 1 FROM file WHERE path = '/var/root/.ssh/authorized_keys'
+    );
+  platform: darwin
+  critical: true

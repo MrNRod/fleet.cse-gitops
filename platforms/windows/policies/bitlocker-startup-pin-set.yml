@@ -1,0 +1,14 @@
+- name: Windows - BitLocker startup PIN set (C:)
+  platform: windows
+  description: |
+    Passes when the OS drive has a TPM+PIN or TPM+PIN+startup key protector
+    (key_protector_type 4 or 6). Fails when the drive unlocks with the TPM
+    alone. Fleet's "Require BitLocker PIN" setting doesn't prompt standard
+    users without Fleet Desktop, so use this to find hosts that still need a PIN.
+  resolution: |
+    Open Manage BitLocker and choose "Change how drive is unlocked at startup"
+    > "Enter a PIN" (needs admin rights), or ask your IT team to add the PIN for you.
+  query: |
+    SELECT 1 FROM bitlocker_key_protectors
+    WHERE drive_letter = 'C:' AND key_protector_type IN (4, 6);
+  critical: false

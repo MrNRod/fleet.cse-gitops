@@ -1,0 +1,15 @@
+# Patch policy for Claude (Fleet-maintained app).
+#
+# DEPENDS ON: `claude/darwin` listed under this fleet's software.fleet_maintained_apps.
+# install_software only works when that app is in the same fleet as this policy.
+#
+# `type: patch` generates the version check from the FMA metadata: a host fails only when
+# Claude is installed and older than the latest maintained version (a missing app passes).
+# patch_when_closed: Fleet installs only while the app is not running.
+- name: macOS - Claude up to date
+  type: patch
+  fleet_maintained_app_slug: claude/darwin
+  install_software: true
+  patch_when_closed: true
+  description: Checks that Claude is up to date if installed.
+  resolution: Fleet updates Claude automatically once it is closed.

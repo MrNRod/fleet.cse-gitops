@@ -1,0 +1,19 @@
+# Self-healing Rosetta 2 install for Apple Silicon.
+#
+# Passes when the host is NOT a macOS 27+ Apple Silicon machine, or the Rosetta runtime is
+# present. A failing host runs ../scripts/install-rosetta.sh, which verifies the same file.
+# Self-contained query: other hosts pass, so no label scoping is needed.
+#
+# Deliberately not scoped away from hosts that are still provisioning: Rosetta is part of
+# building the machine. The script retries once to cope with a network that is still settling.
+#
+# run_script does not register the script for the fleet: also list install-rosetta.sh under
+# the fleet's controls.scripts, or gitops fails with "policy script ... was not defined".
+- name: macOS - Rosetta 2 installed
+  platform: darwin
+  query: "SELECT 1 WHERE NOT EXISTS (SELECT 1 FROM os_version WHERE major >= 27 AND arch LIKE 'ARM%') OR EXISTS (SELECT 1 FROM file WHERE path = '/Library/Apple/usr/libexec/oah/libRosettaRuntime');"
+  critical: false
+  description: Checks that Rosetta 2 is installed on macOS 27 Apple Silicon hosts.
+  resolution: Fleet installs Rosetta 2 automatically.
+  run_script:
+    path: ../scripts/install-rosetta.sh

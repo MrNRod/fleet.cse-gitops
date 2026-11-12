@@ -1,0 +1,22 @@
+- name: USB devices
+  description: |-
+    USB devices currently attached to the host, for removable-media and exfiltration visibility.
+
+    Supports ISO 27001 A.7.10 (storage media) and A.8.12 (data leakage prevention). The usb_devices table exists on macOS and Linux only.
+  query: |-
+    SELECT
+      usb_address,
+      usb_port,
+      vendor,
+      vendor_id,
+      model,
+      model_id,
+      serial,
+      version
+    FROM usb_devices
+    WHERE vendor != '' OR model != '';
+  interval: 86400
+  observer_can_run: true
+  automations_enabled: false
+  logging: snapshot
+  platform: darwin,linux

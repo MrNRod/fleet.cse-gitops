@@ -1,0 +1,9 @@
+# Example host-vitals label: membership is derived from the end user's IdP group (requires
+# the IdP/SCIM integration in Fleet). Edit `value` to a group name from your IdP.
+# The criteria are immutable once created; to change them, delete and recreate the label.
+- name: IdP group - Engineering
+  description: Hosts whose end user is in the Engineering group in the identity provider.
+  label_membership_type: host_vitals
+  criteria:
+    vital: end_user_idp_group
+    value: Engineering

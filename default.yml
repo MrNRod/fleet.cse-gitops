@@ -160,16 +160,6 @@ controls:
   windows_enabled_and_configured: true
   android_enabled_and_configured: true
 
-# Agent options
-agent_options:
-  command_line_flags:
-  config:
-    decorators:
-      load:
-      - SELECT uuid AS host_uuid FROM system_info;
-      - SELECT hostname AS hostname FROM system_info;
-    options:
-      distributed_interval: 20
 
 ###########################################################
 # Labels are static or dynamic groupings of computers for
@@ -191,4 +181,6 @@ agent_options:
 # > "Make sure everyone in finance has the latest version of Excel"
 ###########################################################
 labels:
-  - paths: ./labels/*.yml
+  - paths: ./labels/dynamic/*.yml
+  - paths: ./labels/manual/*.yml
+  - paths: ./labels/host-vitals/*.yml

@@ -1,0 +1,7 @@
+# The macOS build string ends in a lowercase letter on betas (e.g. 27A5279h) and a digit on
+# releases. Read from the OS, so it needs no extra agent.
+- name: macOS hosts running a beta build
+  description: macOS hosts running a beta build of macOS, detected from the build string.
+  label_membership_type: dynamic
+  platform: darwin
+  query: SELECT 1 FROM os_version WHERE build GLOB '*[a-z]';

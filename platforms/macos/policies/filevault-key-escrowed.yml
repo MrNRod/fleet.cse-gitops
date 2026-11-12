@@ -1,0 +1,18 @@
+# Passes when the FileVault personal recovery key on disk is encrypted to
+# Fleet's escrow certificate (the hex is the DER issuer of Fleet's built-in
+# SCEP CA: C=US, O=scep-ca, OU=SCEP CA, CN=Fleet), i.e. the key Fleet holds
+# is the one the Mac would use.
+- name: macOS - FileVault key escrowed to Fleet
+  description: >-
+    Your Mac's FileVault recovery key must be stored safely with IT, so your
+    data can be recovered if you ever forget your password.
+  resolution: >-
+    Log out of your Mac and log back in, or restart it. Your Mac then
+    creates a new recovery key and sends it to IT. If this keeps failing,
+    open My device in Fleet Desktop and follow the disk encryption
+    instructions.
+  query: |-
+    SELECT 1 FROM filevault_prk
+    WHERE hex(from_base64(base64_encrypted)) LIKE '%3041310B30090603550406130255533110300E060355040A1307736365702D63613110300E060355040B130753434550204341310E300C06035504031305466C656574020101%';
+  platform: darwin
+  critical: false

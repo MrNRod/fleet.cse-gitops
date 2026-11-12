@@ -1,0 +1,25 @@
+# Disk space headroom for macOS updates (two related policies).
+#
+# Reads `disk_space`, not `mounts`: on macOS `mounts` reports raw free blocks and cannot see
+# purgeable space (snapshots, caches), so it undercounts. `disk_space` uses Apple's
+# "available for important usage" figure, which is what Finder's Get Info shows and what the
+# installer tests against. See
+# https://fleetdm.com/guides/driving-automations-and-reports-based-on-available-disk-space-on-macos
+#
+# Thresholds are decimal GB as Apple counts them (15000000000 = 15 GB).
+# Report-only: freeing space means deleting someone's files, so nothing runs automatically.
+- name: macOS - Disk space available for a minor update
+  query: SELECT 1 FROM disk_space WHERE bytes_available >= 15000000000;
+  critical: false
+  description: Checks that at least 15 GB is available, including purgeable space, which is the headroom a minor macOS update needs.
+  resolution: "Free up space on the Mac: empty the Trash, remove large files from Downloads, or move them to cloud storage. System Settings > General > Storage shows the biggest consumers."
+  platform: darwin
+
+# Fails on more hosts than the minor check, by design: 35 GB is the headroom a full major
+# upgrade needs. A Mac that passes the minor check can still be unable to take the upgrade.
+- name: macOS - Disk space available for a major upgrade
+  query: SELECT 1 FROM disk_space WHERE bytes_available >= 35000000000;
+  critical: false
+  description: Checks that at least 35 GB is available, including purgeable space, which is the headroom a major macOS upgrade needs. Expect this to fail on more hosts than the minor-update check.
+  resolution: "Free up space before the upgrade: empty the Trash, remove large files from Downloads, or move them to cloud storage. System Settings > General > Storage shows the biggest consumers."
+  platform: darwin
