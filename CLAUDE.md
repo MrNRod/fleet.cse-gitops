@@ -14,7 +14,7 @@ This repo is shared by the whole CSE team, and **it is public**. `CONVENTIONS.md
 - `platforms/**` and `labels/**` are a shared library. Before changing a shared file, run `python3 tools/check-conventions.py --who-uses <path>` and say which fleets the change will touch.
 - Never change a fleet's `name:` (GitOps deletes and recreates the fleet, which unassigns its hosts). Never create fleets in the UI (CI runs with `--delete-other-fleets`).
 - Never write customer names, domains, hostnames, emails, IPs, SSIDs, tenant IDs, certificates, or secrets. Use `example.com` and `$FLEET_SECRET_<NAME>`. Regenerate every `PayloadUUID`.
-- Don't commit or push. The team commits from GitHub Desktop. Leave changes in the working tree, grouped so they split into small commits, and suggest the commit split.
+- Don't commit or push, and never to `main`. Changes go through a pull request, so the `fleet-gitops` dry run runs before anything applies. `.github/CODEOWNERS` maps each fleet file to its owner. The team commits from GitHub Desktop. Leave changes in the working tree, grouped so they split into small commits, and suggest the commit split.
 
 ## Layout
 

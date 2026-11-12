@@ -38,6 +38,9 @@ sets of test machines.
 - **Omitting a top-level key wipes that section.** Leave `policies: []` and similar keys
   in place; don't delete a key to "skip" it.
 - **A label rename is delete plus recreate.** Its membership is empty until hosts check in again.
+- **Never push to `main`; open a pull request.** Merging applies to the live instance. The PR's
+  `fleet-gitops` dry run is the only server-side check, and [CODEOWNERS](.github/CODEOWNERS) asks
+  the owner of any fleet you touch to review.
 - **Commit small.** One concern per commit: "add Zoom PPPC profile", "wire Zoom into adam.yml".
   GitHub Desktop makes this easy. Review the diff file by file before you commit.
 
@@ -200,7 +203,8 @@ at the repo root. It's gitignored, and the checker reads it automatically.
 1. `python3 tools/check-conventions.py`: naming, structure, and leak patterns.
 2. `python3 .claude/skills/fleet-gitops/scripts/validate.py`: Fleet's own static checks (YAML, paths, labels, osquery tables, FMA slugs, profile structure).
 3. `fleetctl gitops -f default.yml $(for f in fleets/*.yml; do echo -f "$f"; done) --dry-run`: the same gate CI runs.
-4. Review every file in GitHub Desktop's diff before you commit, and keep commits small.
+4. Review every file in GitHub Desktop's diff before you commit, keep commits small, and open a pull request.
+   Merge once the `fleet-gitops` check is green.
 
 Nothing runs these for you in CI except the server dry run on pull requests, so run them
 yourself. [flint](https://github.com/headmin/fleet-editor-extensions) (`flint dry-run`) and

@@ -1,0 +1,26 @@
+# Who gets asked to review what. The last matching line wins.
+# See CONVENTIONS.md section 1 and the README's "Making a change".
+
+# Shared library, tooling and docs: anyone on the team.
+*                         @AdamBaali @ddribeiro @GrayW @kc9wwh @adriant172 @mason-buettner @MrNRod @rynsatterlee
+
+# Org-wide settings and CI: the repo admin plus the team, because a mistake here hits every fleet.
+/default.yml              @MrNRod @AdamBaali @ddribeiro @GrayW @kc9wwh @adriant172 @mason-buettner @rynsatterlee
+/.github/                 @MrNRod
+
+# Personal sandbox fleets: the owner reviews changes from anyone else.
+/fleets/adam.yml          @AdamBaali
+/fleets/dale.yml          @ddribeiro
+/fleets/gray.yml          @GrayW
+/fleets/mason.yml         @mason-buettner
+/fleets/noel.yml          @MrNRod
+
+# Usernames from the Customer Success team page in the Fleet handbook
+# (handbook/customer-success/README.md). Josh isn't listed there; kc9wwh is his fleetdm org account.
+# A code owner needs write access to this repo, or GitHub ignores the line.
+/fleets/josh.yml          @kc9wwh
+/fleets/matt.yml          @adriant172
+/fleets/ryn.yml           @rynsatterlee
+
+# The shared "golden" fleet: anyone on the team.
+/fleets/workstations.yml  @AdamBaali @ddribeiro @GrayW @kc9wwh @adriant172 @mason-buettner @MrNRod @rynsatterlee
