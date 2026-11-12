@@ -10,10 +10,12 @@ and labels that anyone can pull into their fleet.
 
 ## How changes deploy
 
+**Never push to `main`.** Work on a branch and open a pull request.
+
 | You do | What happens |
 |---|---|
-| Push to `main` | GitHub Actions runs `fleetctl gitops` and **applies it to the live instance** within minutes. |
-| Open a pull request | The same workflow runs a **dry run only**. This is the only server-side check before an apply. |
+| Open a pull request | GitHub Actions runs `fleetctl gitops --dry-run` against the live instance (the `fleet-gitops` check). [CODEOWNERS](.github/CODEOWNERS) asks the owner of any fleet you touched to review. |
+| Merge it | The same workflow **applies it to the live instance** within minutes. |
 | Nightly, 06:00 UTC | The workflow re-applies `main`, so changes made in the Fleet UI are reverted to what's in git. |
 
 The apply runs with `--delete-other-fleets`: **a fleet that isn't a file in `fleets/` gets deleted**,
@@ -73,8 +75,10 @@ Naming rules for every kind of file are in [CONVENTIONS.md](CONVENTIONS.md).
    validator (YAML, paths, labels, osquery tables, Fleet-maintained app slugs, and profile structure).
    Optional extras are [flint](https://github.com/headmin/fleet-editor-extensions) (`flint dry-run`)
    and [contour](https://github.com/macadmins/contour) (`contour profile validate <file>.mobileconfig`).
-5. **Commit small, from GitHub Desktop.** Make one change per commit and read every file's diff first.
-   Use a pull request when you want the server dry run before it goes live.
+5. **Branch, commit, and open a pull request from GitHub Desktop.** Use **Branch → New branch**,
+   make small commits, read every file's diff first, then **Create Pull Request**.
+6. **Merge when the `fleet-gitops` dry run is green.** In its log, look for any `would've deleted`
+   line before you merge. If you touched someone else's fleet, wait for their review.
 
 ### Customer names: local denylist
 
