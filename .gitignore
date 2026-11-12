@@ -36,7 +36,6 @@ Temporary Items
 .apdisk
 
 # Local-only files (see CONVENTIONS.md)
-.leakcheck.local
 .env
 *.local.yml
 .claude/settings.local.json
