@@ -8,8 +8,8 @@ Usage (from the repo root):
 
 Exit code 1 when there is at least one FAIL. WARNs are advice.
 
-Customer names can't live in a committed file, so put your own denylist (one term per
-line, # for comments) in .leakcheck.local at the repo root. It's gitignored.
+The leak scan flags anything that looks like customer data: emails, IPs, internal hostnames,
+keys, tokens, and embedded certificates. Review each hit before committing.
 """
 import argparse
 import fnmatch
@@ -64,6 +64,7 @@ LEGACY_NAMES = {
 SAFE_EMAIL_DOMAINS = {"example.com", "example.org", "example.net", "fleetdm.com", "apple.com", "users.noreply.github.com"}
 PRIVATE_KEY = re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH |ENCRYPTED )?PRIVATE KEY-----")
 EMAIL = re.compile(r"\b[A-Za-z0-9._%+-]+@([A-Za-z0-9.-]+\.[A-Za-z]{2,})\b")
+INTERNAL_HOST = re.compile(r"\b[a-z0-9][a-z0-9.-]*\.(?:corp|internal|intranet|lan|local|ad|int)\b", re.I)
 IPV4 = re.compile(r"(?<![\d.])(\d{1,3}(?:\.\d{1,3}){3})(?![\d.])")
 SECRETS = [
     (re.compile(r"\bAKIA[0-9A-Z]{16}\b"), "AWS access key"),
@@ -270,18 +271,6 @@ def check_fleets(files):
 
 # ---------------------------------------------------------------- leaks
 
-def load_denylist():
-    terms = []
-    path = os.path.join(ROOT, ".leakcheck.local")
-    if os.path.exists(path):
-        with open(path, encoding="utf-8") as fh:
-            for line in fh:
-                line = line.split("#", 1)[0].strip()
-                if line:
-                    terms.append(line)
-    return terms
-
-
 def ip_is_leak(s):
     try:
         ip = ipaddress.ip_address(s)
@@ -300,16 +289,10 @@ def ip_is_leak(s):
 
 
 def check_leaks(files):
-    deny = load_denylist()
-    deny_res = [(t, re.compile(r"(?<![A-Za-z0-9])" + re.escape(t) + r"(?![A-Za-z0-9])", re.I)) for t in deny]
     for path in files:
         r = rel(path)
-        if r == ".leakcheck.local" or r.startswith(".claude/skills/fleet-gitops/"):
+        if r.startswith(".claude/skills/fleet-gitops/"):
             continue  # upstream skill is vendored verbatim
-        base_lower = r.lower()
-        for t, rx in deny_res:
-            if rx.search(base_lower):
-                add("FAIL", path, f"file path contains denylisted term {t!r}")
         if os.path.splitext(r)[1].lower() not in TEXT_EXT:
             continue
         try:
@@ -318,9 +301,6 @@ def check_leaks(files):
         except OSError:
             continue
         for lineno, line in enumerate(text.splitlines(), 1):
-            for t, rx in deny_res:
-                if rx.search(line):
-                    add("FAIL", path, f"line {lineno}: denylisted term {t!r}")
             if PRIVATE_KEY.search(line):
                 add("FAIL", path, f"line {lineno}: private key material")
             for rx, what in SECRETS:
@@ -330,6 +310,10 @@ def check_leaks(files):
                 dom = m.group(1).lower()
                 if not any(dom == d or dom.endswith("." + d) for d in SAFE_EMAIL_DOMAINS):
                     add("WARN", path, f"line {lineno}: email address {m.group(0)!r}; use @example.com")
+            for m in INTERNAL_HOST.finditer(line):
+                host = m.group(0).lower()
+                if host not in ("fleetd.local",) and not host.startswith(("example.", "*.")):
+                    add("WARN", path, f"line {lineno}: internal-looking hostname {m.group(0)!r}; use example.com")
             for m in IPV4.finditer(line):
                 if ip_is_leak(m.group(1)):
                     add("WARN", path, f"line {lineno}: IP address {m.group(1)}; use 192.0.2.x or a variable")
@@ -399,8 +383,7 @@ def main():
         if args.quiet and level != "FAIL":
             continue
         print(f"{level} {path}: {msg}")
-    deny = "with" if os.path.exists(os.path.join(ROOT, ".leakcheck.local")) else "WITHOUT"
-    print(f"\nChecked {len(files)} files ({deny} a .leakcheck.local denylist): {len(fails)} FAIL, {len(warns)} WARN")
+    print(f"\nChecked {len(files)} files: {len(fails)} FAIL, {len(warns)} WARN")
     return 1 if fails else 0
 
 

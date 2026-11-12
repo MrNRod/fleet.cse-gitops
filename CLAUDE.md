@@ -6,15 +6,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working in this
 
 This is a Fleet GitOps repository: the git-backed source of truth for configuring computers (macOS, Windows, Linux, iOS, iPadOS, Android, ChromeOS) managed by [Fleet](https://fleetdm.com). There's no app to build here — a commit to the default branch is a deploy. CI runs `fleetctl gitops` to apply the YAML in this repo to the live Fleet instance; pull requests get a dry run only. See `.github/workflows/workflow.yml` (GitHub) or `.gitlab-ci.yml` (GitLab).
 
-## Team rules (read CONVENTIONS.md)
+## Team rules
 
-This repo is shared by the whole CSE team, and **it is public**. `CONVENTIONS.md` is the source of truth for layout, naming, and sanitization; follow it for every new or renamed file. In short:
+This repo is public and shared by the CSE team. Follow `CONVENTIONS.md` for layout, naming, and sanitizing.
 
-- `fleets/<firstname>.yml` is that person's sandbox. Don't edit someone else's fleet file unless they asked.
-- `platforms/**` and `labels/**` are a shared library. Before changing a shared file, run `python3 tools/check-conventions.py --who-uses <path>` and say which fleets the change will touch.
-- Never change a fleet's `name:` (GitOps deletes and recreates the fleet, which unassigns its hosts). Never create fleets in the UI (CI runs with `--delete-other-fleets`).
-- Never write customer names, domains, hostnames, emails, IPs, SSIDs, tenant IDs, certificates, or secrets. Use `example.com` and `$FLEET_SECRET_<NAME>`. Regenerate every `PayloadUUID`.
-- Don't commit or push, and never to `main`. Changes go through a pull request, so the `fleet-gitops` dry run runs before anything applies. `.github/CODEOWNERS` maps each fleet file to its owner. The team commits from GitHub Desktop. Leave changes in the working tree, grouped so they split into small commits, and suggest the commit split.
+- `fleets/<name>.yml` is that person's sandbox; don't edit someone else's unless asked.
+- Before changing a shared file in `platforms/` or `labels/`, run `python3 tools/check-conventions.py --who-uses <path>` and say which fleets it touches.
+- Never rename a fleet's `name:` (it deletes and recreates the fleet) or create fleets in the UI (they get deleted).
+- No customer data: use `example.com` and `$FLEET_SECRET_<NAME>`; regenerate every `PayloadUUID`.
+- Don't commit or push. The team commits from GitHub Desktop and merges through PRs.
 
 ## Layout
 
