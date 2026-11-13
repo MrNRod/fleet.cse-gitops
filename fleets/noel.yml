@@ -143,6 +143,14 @@ controls:
     - path: ../platforms/linux/scripts/chrome-extensions.sh
     - path: ../platforms/linux/scripts/firefox-extensions.sh
 
+# Labels
+labels:
+  - name: cse-repro-56867
+    label_membership_type: manual
+    hosts:
+      - Virtualization-a8cb341f-e02f-4f9c-8f6e-8af592b67bb9
+      - 147
+
 ###########################################################
 # Reports
 #
