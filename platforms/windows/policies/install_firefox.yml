@@ -1,0 +1,8 @@
+- name: Windows - Firefox installed
+  platform: windows
+  description: This policy checks that Firefox is installed.
+  resolution: Install Firefox app if not installed.
+  query: "SELECT 1 FROM programs WHERE name = 'Mozilla Firefox';"
+  continuous_automations_enabled: false
+  install_software:
+    hash_sha256: 6dc28633cbd77cb1d044f339185cd467dda39397e4bcca942bfb0ddb2360c681
