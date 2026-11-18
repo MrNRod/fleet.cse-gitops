@@ -206,7 +206,8 @@ software:
     # macOS custom packages
     
     # Windows custom packages
-
+    # Mozilla Firefox 160.0.1 for Windows
+    - hash_sha256: 6dc28633cbd77cb1d044f339185cd467dda39397e4bcca942bfb0ddb2360c681
     # Linux custom packages
 
   app_store_apps: # Apps to install via VPP from the macOS App Store, if any
