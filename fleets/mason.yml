@@ -172,6 +172,7 @@ reports: []
 ###########################################################
 policies:
   - path: ../platforms/macos/policies/all-software-updates-installed.yml
+  - path: ../platforms/windows/policies/install_firefox.yml
 
 ###########################################################
 # Software available for install
@@ -203,13 +204,10 @@ software:
 
   packages: # Custom packages (if any)
     # macOS custom packages
-    # …
-
+    
     # Windows custom packages
-    # …
 
     # Linux custom packages
-    # …
 
   app_store_apps: # Apps to install via VPP from the macOS App Store, if any
     # …
